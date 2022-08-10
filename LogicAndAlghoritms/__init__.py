@@ -1,6 +1,5 @@
 from Game import *
+from GUIrunner import *
 if __name__=='__main__':
-    game=Game()
-    game.printNumeration()
-    print()
-    game.printBoard()
+    gui=GUI()
+    gui.run()
