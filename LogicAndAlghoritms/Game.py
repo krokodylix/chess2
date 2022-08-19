@@ -78,7 +78,6 @@ class Game:
                         self.move(self.fr,self.to)
                         self.fr=-1
                         self.to=-1
-                        print('hi')
                         break
                     time.sleep(0.1)
             else:
@@ -179,7 +178,7 @@ class Game:
                 temp += 8
             # vertically down
             temp = piece.square-8
-            while (temp>0):
+            while (temp>=0):
                 if self.board[temp].piece==None:
                     t2r.append(temp)
                 else:
@@ -201,7 +200,7 @@ class Game:
                 temp+=7
             # -7 diagonal
             temp=piece.square-7
-            while(temp%8!=0 and temp>0):
+            while(temp%8!=0 and temp>=0):
                 if self.board[temp].piece==None:
                     t2r.append(temp)
                 else:
@@ -263,7 +262,7 @@ class Game:
                 temp += 8
             # vertically down
             temp = piece.square-8
-            while (temp>0):
+            while (temp>=0):
                 if self.board[temp].piece==None:
                     t2r.append(temp)
                 else:
@@ -284,7 +283,7 @@ class Game:
                 temp+=7
             # -7 diagonal
             temp=piece.square-7
-            while(temp%8!=0 and temp>0):
+            while(temp%8!=0 and temp>=0):
                 if self.board[temp].piece==None:
                     t2r.append(temp)
                 else:
@@ -318,7 +317,7 @@ class Game:
             for i in range (-1,2,2):
                 for m in posMoves:
                     temp=(piece.square+i*m)
-                    if(abs(temp%8-piece.square%8)<=1 and temp<=64 and temp>=0 and (self.board[temp].piece==None or self.board[temp].piece.color!=piece.color)):
+                    if(abs(temp%8-piece.square%8)<=1 and temp<=63 and temp>=0 and (self.board[temp].piece==None or self.board[temp].piece.color!=piece.color)):
                         t2r.append(temp)
             if(self.canWhiteShortCastle and not self.isWhiteKingChecked() and self.board[5].piece==None and self.board[6].piece==None):
                 canI=True
@@ -343,7 +342,7 @@ class Game:
             for i in range (-1,2,2):
                 for m in posMoves:
                     temp=(piece.square+i*m)
-                    if(abs(temp%8-piece.square%8)<=1 and temp<=64 and temp>=0 and (self.board[temp].piece==None or self.board[temp].piece.color!=piece.color)):
+                    if(abs(temp%8-piece.square%8)<=1 and temp<=63 and temp>=0 and (self.board[temp].piece==None or self.board[temp].piece.color!=piece.color)):
                         t2r.append(temp)
             if(self.canBlackShortCastle and not self.isBlackKingChecked() and self.board[61].piece==None and self.board[62].piece==None):
                 canI=True
@@ -434,7 +433,7 @@ class Game:
                 temp += 8
             # vertically down
             temp = piece.square-8
-            while (temp>0):
+            while (temp>=0):
                 if self.board[temp].piece==None:
                     t2r.append(temp)
                 else:
@@ -454,7 +453,7 @@ class Game:
                 temp+=7
             # -7 diagonal
             temp=piece.square-7
-            while(temp%8!=0 and temp>0):
+            while(temp%8!=0 and temp>=0):
                 if self.board[temp].piece==None:
                     t2r.append(temp)
                 else:
@@ -511,7 +510,7 @@ class Game:
                 temp += 8
             # vertically down
             temp = piece.square-8
-            while (temp>0):
+            while (temp>=0):
                 if self.board[temp].piece==None:
                     t2r.append(temp)
                 else:
@@ -530,7 +529,7 @@ class Game:
                 temp+=7
             # -7 diagonal
             temp=piece.square-7
-            while(temp%8!=0 and temp>0):
+            while(temp%8!=0 and temp>=0):
                 if self.board[temp].piece==None:
                     t2r.append(temp)
                 else:
@@ -561,7 +560,7 @@ class Game:
             for i in range (-1,2,2):
                 for m in posMoves:
                     temp=(piece.square+i*m)
-                    if(abs(temp%8-piece.square%8)<=1 and temp<=64 and temp>=0):
+                    if(abs(temp%8-piece.square%8)<=1 and temp<=63 and temp>=0):
                         t2r.append(temp)
             return t2r
         if piece.pieceType=='N':
@@ -696,6 +695,8 @@ class Game:
             print('4. Bishop')
             if not self.isGUI:
                 inp=int(input('>> '))
+                while not (inp>=1 and inp<=4):
+                    inp = int(input('>> '))
             else:
                 inp=self.choice
             self.board[to].piece.pieceType=transformations[inp-1]
@@ -708,6 +709,8 @@ class Game:
             print('4. Bishop')
             if not self.isGUI:
                 inp=int(input('>> '))
+                while not (inp>=1 and inp<=4):
+                    inp = int(input('>> '))
             else:
                 inp = self.choice
             self.board[to].piece.pieceType=transformations[inp-1]
