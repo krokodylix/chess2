@@ -1,4 +1,3 @@
-
 import tkinter as tk
 from LogicAndAlghoritms import Game
 
@@ -19,8 +18,8 @@ class GUI:
         self.to=-1
         self.infoFrame=tk.Frame(self.root)
         self.infoFrame.config(bg='#C4A484')
+        self.doWeWaitForChoice=False
         self.infoFrame.place(relx=0.83,rely=0.05,relheight=0.9,relwidth=0.15)
-
     def sortAr(self):
         for i in range(0,len(self.buttons)):
             for j in range (i+1,len(self.buttons)):
@@ -47,43 +46,75 @@ class GUI:
 
 
     def setDataInGame(self, data):
-        colors=['white','black']
-        if self.fr == -1 or (self.game.board[data].piece!=None and colors[len(self.game.historyOfMoves)%2]==self.game.board[data].piece.color):
-            self.fr = data
-            return
-        if self.fr!=-1 and self.to==-1:
-            self.to = data
-            if(len(self.game.historyOfMoves)%2==0 and [self.fr,self.to] in self.game.whereWhiteCanGo() ):
-                if self.game.board[self.fr].piece.pieceType=='P' and data>=56:
-                    self.showTrans()
+        if not self.doWeWaitForChoice:
+            colors=['white','black']
+            if self.fr == -1 or (self.game.board[data].piece!=None and colors[len(self.game.historyOfMoves)%2]==self.game.board[data].piece.color):
+                self.fr = data
+                return
+            if self.fr!=-1 and self.to==-1:
+                self.to = data
+                if(len(self.game.historyOfMoves)%2==0 and [self.fr,self.to] in self.game.whereWhiteCanGo() ):
+                    if self.game.board[self.fr].piece.pieceType=='P' and data>=56:
+                        self.showTrans()
+                        self.doWeWaitForChoice=True
+                        return
 
-                self.game.move(self.fr, self.to)
-                self.updateBoard()
-                self.labelInfo.config(text='black to move')
+                    self.game.move(self.fr, self.to)
+                    self.updateBoard()
+                    self.labelInfo.config(text='black to move')
 
-                self.game.choice=-1
-                if len(self.game.whereBlackCanGo())==0 and self.game.isBlackKingChecked():
-                    self.labelInfo.config(text='mate, white won')
-                if len(self.game.whereBlackCanGo())==0 and not self.game.isBlackKingChecked():
-                    self.labelInfo.config(text='stalemate, draw')
-            if(len(self.game.historyOfMoves)%2==1 and [self.fr,self.to] in self.game.whereBlackCanGo() ):
-                if self.game.board[self.fr].piece.pieceType=='P' and data<=7:
-                    self.showTrans()
+                    self.game.choice=-1
+                    if len(self.game.whereBlackCanGo())==0 and self.game.isBlackKingChecked():
+                        self.labelInfo.config(text='mate, white won')
+                    if len(self.game.whereBlackCanGo())==0 and not self.game.isBlackKingChecked():
+                        self.labelInfo.config(text='stalemate, draw')
+                if(len(self.game.historyOfMoves)%2==1 and [self.fr,self.to] in self.game.whereBlackCanGo() ):
+                    if self.game.board[self.fr].piece.pieceType=='P' and data<=7:
+                        self.showTrans()
+                        self.doWeWaitForChoice=True
+                        return
 
-                self.game.move(self.fr, self.to)
-                self.updateBoard()
-                self.labelInfo.config(text='white to move')
-                if len(self.game.whereWhiteCanGo())==0 and self.game.isWhiteKingChecked():
-                    self.labelInfo.config(text='mate, black won')
-                if len(self.game.whereWhiteCanGo())==0 and not self.game.isWhiteKingChecked():
-                    self.labelInfo.config(text='stalemate, draw')
-            self.fr=-1
-            self.to=-1
-            return
+                    self.game.move(self.fr, self.to)
+                    self.updateBoard()
+                    self.labelInfo.config(text='white to move')
+                    if len(self.game.whereWhiteCanGo())==0 and self.game.isWhiteKingChecked():
+                        self.labelInfo.config(text='mate, black won')
+                    if len(self.game.whereWhiteCanGo())==0 and not self.game.isWhiteKingChecked():
+                        self.labelInfo.config(text='stalemate, draw')
+                self.fr=-1
+                self.to=-1
+                return
 
 
     def setGamesChoice(self,choice):
-        self.game.choice=choice
+        if len(self.game.historyOfMoves)%2==0:
+            self.game.choice=choice
+            self.game.move(self.fr, self.to)
+            self.updateBoard()
+            self.labelInfo.config(text='black to move')
+            self.doWeWaitForChoice=False
+            self.game.choice = -1
+            self.stopShowingTrans()
+            if len(self.game.whereBlackCanGo()) == 0 and self.game.isBlackKingChecked():
+                self.labelInfo.config(text='mate, white won')
+            if len(self.game.whereBlackCanGo()) == 0 and not self.game.isBlackKingChecked():
+                self.labelInfo.config(text='stalemate, draw')
+            print(choice)
+        else:
+            self.game.choice=choice
+            self.game.move(self.fr, self.to)
+            self.updateBoard()
+            self.labelInfo.config(text='white to move')
+            self.doWeWaitForChoice=False
+            self.game.choice = -1
+            self.stopShowingTrans()
+            if len(self.game.whereWhiteCanGo()) == 0 and self.game.isWhiteKingChecked():
+                self.labelInfo.config(text='mate, black won')
+            if len(self.game.whereWhiteCanGo()) == 0 and not self.game.isWhiteKingChecked():
+                self.labelInfo.config(text='stalemate, draw')
+            print(choice)
+        self.fr = -1
+        self.to = -1
     def showTrans(self):
         for i in range(4):
             b = tk.Button(self.infoFrame)
@@ -125,9 +156,13 @@ class GUI:
         self.labelInfo.place(relx=0,rely=0.1,relwidth=1,relheight=0.15)
         self.labelInfo.config(text='white to move',font=("Arial",15),bg='#C4A484')
         self.sortAr()
-        self.trans=[[tk.PhotoImage(file='assets/blackQ.png'),tk.PhotoImage(file='assets/blackR.png'),tk.PhotoImage(file='assets/blackN.png'),tk.PhotoImage(file='assets/blackB.png')],[tk.PhotoImage(file='assets/whiteQ.png'),tk.PhotoImage(file='assets/whiteR.png'),tk.PhotoImage(file='assets/whiteN.png'),tk.PhotoImage(file='assets/whiteB.png')]]
 
+        self.trans=[[tk.PhotoImage(file='assets/blackQ.png'),tk.PhotoImage(file='assets/blackR.png'),tk.PhotoImage(file='assets/blackN.png'),tk.PhotoImage(file='assets/blackB.png')],[tk.PhotoImage(file='assets/whiteQ.png'),tk.PhotoImage(file='assets/whiteR.png'),tk.PhotoImage(file='assets/whiteN.png'),tk.PhotoImage(file='assets/whiteB.png')]]
         self.root.mainloop()
+
+
+
+
 
 class GUIButton(tk.Button):
     def __init__(self,index,parent,*args,**kwargs):
