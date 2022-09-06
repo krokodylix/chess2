@@ -1,5 +1,3 @@
-import time
-
 from Piece import *
 from Square import Square
 import copy
@@ -68,27 +66,7 @@ class Game:
         self.canBlackLongCastle=True
         self.real=True
 
-    def letSPlayGui(self):
-        while True:
-            if len(self.historyOfMoves)%2==0:
-                moves=self.whereWhiteCanGo()
-                while True:
 
-                    if [self.fr,self.to] in moves:
-                        self.move(self.fr,self.to)
-                        self.fr=-1
-                        self.to=-1
-                        break
-                    time.sleep(0.1)
-            else:
-                moves=self.whereBlackCanGo()
-                while True:
-                    if [self.fr,self.to] in moves:
-                        self.move(self.fr,self.to)
-                        self.fr=-1
-                        self.to=-1
-                        break
-                    time.sleep(0.1)
 
     def letsPlay(self):
         while(True):
